@@ -21,11 +21,11 @@ export function DashboardProvider({ children }) {
 
   const host1offline = "http://localhost:3001/"
   const host2offline = "http://localhost:8000/"
-  const host1online = "https://sergio-amir-backend.vercel.app/"
-  const host2online = "https://sergio-amir-live.onrender.com/"
+  const host1online = "https://my-nft-backend.vercel.app/"
+  const host2online = "https://my-nft-liver-server.onrender.com/"
 
   useEffect(() => {
-    const eventSource = new EventSource(`${host2offline}api/realtime-events`);
+    const eventSource = new EventSource(`${host2online}api/realtime-events`);
 
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -121,7 +121,7 @@ export function DashboardProvider({ children }) {
   // Products Management
   const addProduct = async (productData) => {
     try {
-      const res = await fetch(`${host1offline}api/products/addProduct`, {
+      const res = await fetch(`${host1online}api/products/addProduct`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(productData),
@@ -146,7 +146,7 @@ export function DashboardProvider({ children }) {
   const deleteProduct = async (productId) => {
     try {
       // Call your backend API to delete the product
-      const response = await fetch(`${host1offline}api/products/deleteProduct/${productId}`, {
+      const response = await fetch(`${host1online}api/products/deleteProduct/${productId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -175,7 +175,7 @@ export function DashboardProvider({ children }) {
   const fetchProducts = async (page = 1) => {
     try {
       setIsLoadingProducts(true);
-      const response = await fetch(`${host1offline}api/products/products?page=${page}`);
+      const response = await fetch(`${host1online}api/products/products?page=${page}`);
 
       if (!response.ok) {
         console.error("Failed to fetch products");
@@ -203,7 +203,7 @@ export function DashboardProvider({ children }) {
       setIsLoadingUsers(true);
 
       const response = await fetch(
-        `${host1offline}api/users/users?page=${page}`
+        `${host1online}api/users/users?page=${page}`
       );
 
       if (!response.ok) {
@@ -230,7 +230,7 @@ export function DashboardProvider({ children }) {
       setIsLoadingUsers(true);
 
       const response = await fetch(
-        `${host1offline}api/users/search?query=${query}&page=${page}`
+        `${host1online}api/users/search?query=${query}&page=${page}`
       );
 
       const data = await response.json();
@@ -248,7 +248,7 @@ export function DashboardProvider({ children }) {
   const updateUserAPI = async (userId, updatedData) => {
     try {
       const response = await fetch(
-        `${host1offline}api/users/updateUser/${userId}`,
+        `${host1online}api/users/updateUser/${userId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -281,7 +281,7 @@ export function DashboardProvider({ children }) {
     try {
       // Send a PUT request to the backend to update the user account
       const response = await fetch(
-        `${host1offline}api/users/rechargeTrainingAccount/${userId}`,
+        `${host1online}api/users/rechargeTrainingAccount/${userId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -320,7 +320,7 @@ export function DashboardProvider({ children }) {
     try {
       setIsLoadingVipLevels(true);
 
-      const response = await fetch(`${host1offline}api/viplevel/`);
+      const response = await fetch(`${host1online}api/viplevel/`);
 
       if (!response.ok) {
         console.error("Failed to fetch VIP levels");
@@ -343,7 +343,7 @@ export function DashboardProvider({ children }) {
   // =========================
   const createVipLevel = async (vipData) => {
     try {
-      const response = await fetch(`${host1offline}api/viplevel/create`, {
+      const response = await fetch(`${host1online}api/viplevel/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(vipData),
@@ -370,7 +370,7 @@ export function DashboardProvider({ children }) {
   // =========================
   const updateVipLevel = async (vipId, updatedData) => {
     try {
-      const response = await fetch(`${host1offline}api/viplevel/update/${vipId}`, {
+      const response = await fetch(`${host1online}api/viplevel/update/${vipId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedData),
@@ -402,7 +402,7 @@ export function DashboardProvider({ children }) {
   // =========================
   const deleteVipLevel = async (vipId) => {
     try {
-      const response = await fetch(`${host1offline}api/viplevel/delete/${vipId}`, {
+      const response = await fetch(`${host1online}api/viplevel/delete/${vipId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
@@ -428,7 +428,7 @@ export function DashboardProvider({ children }) {
     try {
       setIsLoadingReferral(true);
 
-      const response = await fetch(`${host1offline}api/referral/`);
+      const response = await fetch(`${host1online}api/referral/`);
       const result = await response.json();
 
       if (!response.ok) {
@@ -453,7 +453,7 @@ export function DashboardProvider({ children }) {
   // =========================
   const createReferralSettings = async (data) => {
     try {
-      const response = await fetch(`${host1offline}api/referral/create`, {
+      const response = await fetch(`${host1online}api/referral/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -480,7 +480,7 @@ export function DashboardProvider({ children }) {
   // =========================
   const updateReferralSettings = async (id, updatedData) => {
     try {
-      const response = await fetch(`${host1offline}api/referral/update/${id}`, {
+      const response = await fetch(`${host1online}api/referral/update/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedData),
@@ -507,7 +507,7 @@ export function DashboardProvider({ children }) {
   // =========================
   const deleteReferralSettings = async (id) => {
     try {
-      const response = await fetch(`${host1offline}api/referral/delete/${id}`, {
+      const response = await fetch(`${host1online}api/referral/delete/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });

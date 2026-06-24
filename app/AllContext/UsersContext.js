@@ -14,8 +14,8 @@ export function UsersProvider({ children }) {
   const router = useRouter();
   const host1offline = "http://localhost:3001/"
   const host2offline = "http://localhost:8000/"
-  const host1online = "https://sergio-amir-backend.vercel.app/"
-  const host2online = "https://sergio-amir-live.onrender.com/"
+  const host1online = "https://my-nft-backend.vercel.app/"
+  const host2online = "https://my-nft-liver-server.onrender.com/"
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -29,7 +29,7 @@ export function UsersProvider({ children }) {
 
   const fetchUserById = async (id) => {
     try {
-      const response = await fetch(`${host1offline}api/users/getUser/${id}`);
+      const response = await fetch(`${host1online}api/users/getUser/${id}`);
 
       const result = await response.json();
       if (!response.ok) {
@@ -52,7 +52,7 @@ export function UsersProvider({ children }) {
   // Function to handle the POST request
   const submitNewUser = async (data) => {
     try {
-      const response = await fetch(`${host1offline}api/users/createUser`, {
+      const response = await fetch(`${host1online}api/users/createUser`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +84,7 @@ export function UsersProvider({ children }) {
   // 🧠 Add this inside UsersProvider, below submitNewUser
   const loginUser = async (data) => {
     try {
-      const response = await fetch(`${host1offline}api/users/login`, {
+      const response = await fetch(`${host1online}api/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -119,7 +119,7 @@ export function UsersProvider({ children }) {
   const updateUserAPI = async (userId, updatedData) => {
     try {
       const response = await fetch(
-        `${host1offline}api/users/updateUser/${userId}`,
+        `${host1online}api/users/updateUser/${userId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -149,7 +149,7 @@ export function UsersProvider({ children }) {
   const submitTask = async (userId, updatedData) => {
     try {
       const response = await fetch(
-        `${host1offline}api/users/submitTask/${userId}`,
+        `${host1online}api/users/submitTask/${userId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -178,7 +178,7 @@ export function UsersProvider({ children }) {
   // Inside UsersProvider
   const fetchOptimizationProducts = async (count) => {
     try {
-      const response = await fetch(`${host1offline}api/products/fetchProducts/${count}`);
+      const response = await fetch(`${host1online}api/products/fetchProducts/${count}`);
       if (!response.ok) {
         const errData = await response.json();
         throw new Error(errData.error || "Failed to fetch products");
@@ -194,7 +194,7 @@ export function UsersProvider({ children }) {
   // Fetch all tasks for a user
   const fetchTasks = async (userId) => {
     try {
-      const response = await fetch(`${host1offline}api/users/fetchTasks/${userId}`);
+      const response = await fetch(`${host1online}api/users/fetchTasks/${userId}`);
       const result = await response.json();
 
       if (!response.ok) {
@@ -213,7 +213,7 @@ export function UsersProvider({ children }) {
   const getTaskForUser = async (userId, taskNo, vipInfo, version) => {
     try {
       const response = await fetch(
-        `${host1offline}api/users/getTaskForUser/${userId}/${taskNo}/${version}`,
+        `${host1online}api/users/getTaskForUser/${userId}/${taskNo}/${version}`,
         {
           method: "POST",
           headers: {
@@ -243,7 +243,7 @@ export function UsersProvider({ children }) {
   // Save a task (normal or combo) and apply commission
   const saveTask = async ({ userId, orderType, combo, product }) => {
     try {
-      const response = await fetch(`${host1offline}api/users/saveTask`, {
+      const response = await fetch(`${host1online}api/users/saveTask`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -292,7 +292,7 @@ export function UsersProvider({ children }) {
   // Create a new transaction
   const createTransactionAPI = async (data) => {
     try {
-      const response = await fetch(`${host1offline}api/users/createTransaction`, {
+      const response = await fetch(`${host1online}api/users/createTransaction`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -316,7 +316,7 @@ export function UsersProvider({ children }) {
   // Fetch all transactions for a user
   const getUserTransactionsAPI = async (userId) => {
     try {
-      const response = await fetch(`${host1offline}api/users/getTransactions/${userId}`);
+      const response = await fetch(`${host1online}api/users/getTransactions/${userId}`);
 
       const result = await response.json();
       console.log(result.transactions)
@@ -334,7 +334,7 @@ export function UsersProvider({ children }) {
 
   const createWalletAddressAPI = async (data) => {
     try {
-      const response = await fetch(`${host1offline}api/users/createAddress`, {
+      const response = await fetch(`${host1online}api/users/createAddress`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -357,7 +357,7 @@ export function UsersProvider({ children }) {
 
   const updateWalletAddressAPI = async (addressId, data) => {
     try {
-      const response = await fetch(`${host1offline}api/users/updateAddress/${addressId}`, {
+      const response = await fetch(`${host1online}api/users/updateAddress/${addressId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -380,7 +380,7 @@ export function UsersProvider({ children }) {
 
   const deleteWalletAddressAPI = async (addressId, userId) => {
     try {
-      const response = await fetch(`${host1offline}api/users/deleteAddress/${addressId}?userId=${userId}`, {
+      const response = await fetch(`${host1online}api/users/deleteAddress/${addressId}?userId=${userId}`, {
         method: "DELETE",
       });
 
@@ -399,7 +399,7 @@ export function UsersProvider({ children }) {
 
   const getWalletAddressesAPI = async (userId) => {
     try {
-      const response = await fetch(`${host1offline}api/users/getWalletAddresses/${userId}`);
+      const response = await fetch(`${host1online}api/users/getWalletAddresses/${userId}`);
 
       const result = await response.json();
 
@@ -416,7 +416,7 @@ export function UsersProvider({ children }) {
 
   const getWallets = async () => {
     try {
-      const response = await fetch(`${host1offline}api/users/getWallet`);
+      const response = await fetch(`${host1online}api/users/getWallet`);
       const data = await response.json();
 
       if (!response.ok) throw new Error(data.error || "Failed to fetch wallets");
@@ -430,7 +430,7 @@ export function UsersProvider({ children }) {
 
   const getCombos = async (userId) => {
     try {
-      const response = await fetch(`${host1offline}api/combo/user/${userId}/user`);
+      const response = await fetch(`${host1online}api/combo/user/${userId}/user`);
       const data = await response.json();
 
       if (!response.ok) throw new Error(data.message || "Failed to fetch combos");
@@ -449,7 +449,7 @@ export function UsersProvider({ children }) {
     try {
       setIsLoadingVipLevels(true);
 
-      const response = await fetch(`${host1offline}api/viplevel/`);
+      const response = await fetch(`${host1online}api/viplevel/`);
 
       if (!response.ok) {
         console.error("Failed to fetch VIP levels");
@@ -473,7 +473,7 @@ export function UsersProvider({ children }) {
 
   const getReferralsAPI = async (userId) => {
     try {
-      const response = await fetch(`${host1offline}api/users/getReferrals/${userId}`);
+      const response = await fetch(`${host1online}api/users/getReferrals/${userId}`);
 
       const result = await response.json();
 
