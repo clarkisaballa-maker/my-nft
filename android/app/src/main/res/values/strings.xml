@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Movee Tech</string>
+    <string name="title_activity_main">Movee Tech</string>
+    <string name="package_name">come.movetech2.app</string>
+    <string name="custom_url_scheme">come.movetech2.app</string>
+</resources>

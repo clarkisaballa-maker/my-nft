@@ -149,7 +149,7 @@ export default function ProfilePage() {
   const handleCopyReferralLink = async () => {
     if (!user.invitationCode) return
 
-    const referralLink = `https://moveetech1.vercel.app/signup?code=${user.invitationCode}`
+    const referralLink = `https://moveetech.online/signup?code=${user.invitationCode}`
 
     try {
       await navigator.clipboard.writeText(referralLink)

@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'come.movetech1.app',
+  appId: 'come.movetech2.app',
   appName: 'Movee Tech',
   webDir: 'out'
 };

@@ -259,7 +259,7 @@ export default function HomePage() {
                   )
                 })}
                 {!isNative && (
-                  <Link href="https://moveetech1.vercel.app/moveetech.apk" className="w-full">
+                  <Link href="https://moveetech.online/moveetech.apk" className="w-full">
                     <Button
                       variant="ghost"
                       className="group relative w-full h-32 p-0 overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600 to-orange-700 shadow-lg hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 transform hover:scale-105 border-2 border-amber-400 hover:border-white"
