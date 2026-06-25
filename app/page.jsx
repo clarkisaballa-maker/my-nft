@@ -194,26 +194,7 @@ export default function HomePage() {
 
         <main className="flex-1 overflow-auto pb-24">
           {/* Enhanced Hero Section */}
-          <section className="relative w-full h-[400px] overflow-hidden bg-[#1a140c]">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#1a140c] via-[#3a2f20] to-[#1a140c]"></div>
-
-            {/* Floating Elements */}
-            <div className="absolute top-20 left-10 w-32 h-32 bg-amber-500/20 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-20 right-10 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl"></div>
-
-            <div className="relative z-10 flex flex-col items-center justify-center h-full p-6 text-center">
-              <div className="mb-6 p-5 rounded-full bg-amber-500 shadow-2xl">
-                <LucideIcons.Film className="h-16 w-16 text-[#1a140c]" />
-              </div>
-              <h2 className="text-5xl md:text-6xl font-bold text-white mb-4 leading-tight">
-                Let's work
-                <span className="block">together!</span>
-              </h2>
-              <p className="text-xl text-gray-300 max-w-2xl mb-8">
-                Discover seamless services, exclusive events, and unparalleled support in our premium platform.
-              </p>
-            </div>
-          </section>
+          
 
           {/* Enhanced Navigation Tabs */}
           <section className="w-full py-12 bg-[#241c12]">

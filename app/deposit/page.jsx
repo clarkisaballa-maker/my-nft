@@ -57,9 +57,113 @@ export default function DepositPage() {
                 <span className="text-amber-400 font-semibold text-sm sm:text-base">Crypto Deposit</span>
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-white">Deposit Funds</h2>
-              <p className="text-base sm:text-lg text-gray-300 px-4">
-                Choose from 3 secure cryptocurrency deposit addresses
-              </p>
+              <div className="mt-6 max-w-4xl mx-auto">
+  <div className="bg-[#2a2016]/70 backdrop-blur-sm border border-amber-500/20 rounded-2xl p-5 sm:p-7 text-left shadow-lg">
+    <div className="flex items-center gap-3 mb-5">
+      <LucideIcons.Info className="h-6 w-6 text-amber-400" />
+      <h3 className="text-xl sm:text-2xl font-bold text-amber-400">
+        Deposit Instructions
+      </h3>
+    </div>
+
+    <div className="space-y-5 text-gray-300">
+      <div className="flex items-start gap-4">
+        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500 text-[#1a140c] font-bold">
+          1
+        </div>
+        <div>
+          <h4 className="font-semibold text-white">
+            Copy Any Deposit Address
+          </h4>
+          <p className="text-sm sm:text-base text-gray-300 mt-1">
+            Choose <span className="text-amber-400 font-semibold">any one</span>{" "}
+            of the cryptocurrency deposit addresses provided below and copy it.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-start gap-4">
+        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500 text-[#1a140c] font-bold">
+          2
+        </div>
+        <div>
+          <h4 className="font-semibold text-white">
+            Deposit the Required Amount
+          </h4>
+          <p className="text-sm sm:text-base text-gray-300 mt-1">
+            Send the <span className="text-amber-400 font-semibold">exact amount</span>{" "}
+            required for the package you want to purchase. Make the transaction
+            to <span className="text-amber-400 font-semibold">only one</span>{" "}
+            of the available deposit addresses.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-start gap-4">
+        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500 text-[#1a140c] font-bold">
+          3
+        </div>
+        <div>
+          <h4 className="font-semibold text-white">
+            Upload Your Payment Receipt
+          </h4>
+          <p className="text-sm sm:text-base text-gray-300 mt-1">
+            After completing your payment, click the{" "}
+            <span className="text-amber-400 font-semibold">
+              "Upload Receipt Picture"
+            </span>{" "}
+            button below. This will open our Live Support Chat.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-start gap-4">
+        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500 text-[#1a140c] font-bold">
+          4
+        </div>
+        <div>
+          <h4 className="font-semibold text-white">
+            Send Your Transaction Screenshot
+          </h4>
+          <p className="text-sm sm:text-base text-gray-300 mt-1">
+            Upload a clear screenshot or receipt of your completed transaction
+            in the Live Support Chat for verification.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-start gap-4">
+        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500 text-[#1a140c] font-bold">
+          5
+        </div>
+        <div>
+          <h4 className="font-semibold text-white">
+            Package Activation
+          </h4>
+          <p className="text-sm sm:text-base text-gray-300 mt-1">
+            Our support team will verify your transaction. Once confirmed, your
+            selected package will be activated according to the amount you
+            deposited.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
+        <div className="flex items-start gap-3">
+          <LucideIcons.AlertCircle className="h-5 w-5 text-amber-400 mt-0.5" />
+          <p className="text-sm sm:text-base text-gray-200">
+            <span className="font-semibold text-amber-400">
+              Important:
+            </span>{" "}
+            Please deposit the exact package amount and upload a clear payment
+            screenshot. This helps our support team verify your transaction
+            quickly and activate your package without delay.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
             </div>
 
             <Tabs defaultValue="deposit" className="w-full">
