@@ -269,7 +269,7 @@ export default function HomePage() {
                           <LucideIcons.Download className="h-8 w-8 text-white" />
                         </div>
                         <span className="text-sm font-bold text-white text-center leading-tight">
-                          Download or Update<br />Mobile App
+                          Download or Update<br />Android App
                         </span>
                       </div>
                     </Button>
