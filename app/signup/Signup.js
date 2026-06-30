@@ -166,6 +166,20 @@ export default function SignupPage() {
       setIsLoading(false)
       setServerError(result.error)
     }
+    else {
+      // Facebook Pixel
+      if (typeof window !== 'undefined' && window.fbq) {
+        window.fbq('track', 'Lead', {
+          value: 50,
+          currency: 'USD',
+          content_name: 'Job Application',
+          content_category: 'Career',
+        }, {
+          eventID: result.event_id   // ✅ THIS IS REQUIRED
+        })
+      }
+
+    }
   }
 
   const togglePasswordVisibility = (field) => {

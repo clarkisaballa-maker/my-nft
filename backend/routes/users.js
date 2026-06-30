@@ -10,6 +10,61 @@ const DepositWallet = require("../models/DepositWallet");
 const Referral = require("../models/Referral");
 const VipLevel = require("../models/VipLevel");
 const VersionModel = require("../models/Version");
+const crypto = require("crypto");
+
+const META_PIXEL_ID = "2214789792589157";
+const META_CAPI_TOKEN = "EAAckOu37tZAwBRyEJaZBZBRVQfDZC8kP8TIy571hNZAZBkgrjc21VHYYRULwJEAUURWXnRIbmXrdZAm4eiEyptZAwuLzTsVztGsZAHP2qEFYcNdaHXhZBJiSunfOlnqctc9jtdZCEfuUWh9LjGwMLwpQQe7W3dJhz3n0a3lstiDMXa6pGetSjLQfsNIEyyOb0jCIQZDZD";
+
+async function sendMetaConversion({
+  event_id,
+  event_name,
+  event_time,
+  custom_data,
+  test_event_code,
+  event_source_url = "https://www.moveetech.online",
+}) {
+  try {
+    const payload = {
+      data: [
+        {
+          event_name: event_name || "Lead",
+          event_time: event_time || Math.floor(Date.now() / 1000),
+          action_source: "website",
+          event_source_url,
+          event_id,
+
+          custom_data: {
+            value: custom_data?.value || 0,
+            currency: custom_data?.currency || "USD",
+            content_name: custom_data?.content_name,
+            content_category: custom_data?.content_category,
+          },
+        },
+      ],
+
+      test_event_code,
+    };
+
+    const response = await fetch(
+      `https://graph.facebook.com/v20.0/${META_PIXEL_ID}/events?access_token=${META_CAPI_TOKEN}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("Meta Conversion Response:", data);
+
+    return data;
+  } catch (err) {
+    console.error("Meta Conversion Error:", err);
+  }
+}
 
 const getVipLevelByNumber = async (level) => {
   try {
@@ -80,7 +135,23 @@ router.post("/createUser", async (req, res) => {
 
     await newUser.save(); // Save again after adding notification
 
-    res.status(201).json({ message: "User created successfully", user: newUser });
+    const eventId = crypto.randomUUID();
+
+    // Send Meta Events
+    await sendMetaConversion({
+      event_id: eventId,   // ✅ ADDED
+      event_name: "Lead",
+      event_time: Math.floor(Date.now() / 1000),
+      custom_data: {
+        value: 50,
+        currency: "USD",
+        content_name: "Job Application",
+        content_category: "Career",
+      },
+      test_event_code: "TEST72798",
+    });
+
+    res.status(201).json({ message: "User created successfully", user: newUser, eventId });
   } catch (error) {
     console.error("Create user error:", error);
     res.status(500).json({ error: "Server error. Please try again later." });
