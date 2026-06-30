@@ -175,7 +175,7 @@ export default function SignupPage() {
           content_name: 'Job Application',
           content_category: 'Career',
         }, {
-          eventID: result.event_id   // ✅ THIS IS REQUIRED
+          eventID: result.eventId   // ✅ THIS IS REQUIRED
         })
       }
 
