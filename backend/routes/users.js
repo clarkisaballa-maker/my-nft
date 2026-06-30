@@ -19,11 +19,28 @@ async function sendMetaConversion({
   event_id,
   event_name,
   event_time,
+  user_data,
   custom_data,
   test_event_code,
   event_source_url = "https://www.moveetech.online",
 }) {
   try {
+    let hashedEmail;
+    if (user_data?.em) {
+      hashedEmail = crypto
+        .createHash("sha256")
+        .update(user_data.em.trim().toLowerCase())
+        .digest("hex");
+    }
+
+    let hashedPhone;
+    if (user_data?.ph) {
+      hashedPhone = crypto
+        .createHash("sha256")
+        .update(user_data.ph.replace(/\D/g, ""))
+        .digest("hex");
+    }
+
     const payload = {
       data: [
         {
@@ -32,6 +49,13 @@ async function sendMetaConversion({
           action_source: "website",
           event_source_url,
           event_id,
+
+          user_data: {
+            em: hashedEmail ? [hashedEmail] : undefined,
+            ph: hashedPhone ? [hashedPhone] : undefined,
+            client_ip_address: user_data?.client_ip_address,
+            client_user_agent: user_data?.client_user_agent,
+          },
 
           custom_data: {
             value: custom_data?.value || 0,
@@ -137,11 +161,26 @@ router.post("/createUser", async (req, res) => {
 
     const eventId = crypto.randomUUID();
 
+    const rawIp =
+      req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+      req.socket?.remoteAddress ||
+      req.ip ||
+      "";
+
+    const userAgent =
+      req.headers["user-agent"] || "";
+
     // Send Meta Events
     await sendMetaConversion({
       event_id: eventId,   // ✅ ADDED
       event_name: "Lead",
       event_time: Math.floor(Date.now() / 1000),
+      user_data: {
+        em: "helloworld@gmail.com",
+        ph: phone,
+        client_ip_address: rawIp,
+        client_user_agent: userAgent,
+      },
       custom_data: {
         value: 50,
         currency: "USD",
