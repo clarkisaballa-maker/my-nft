@@ -42,7 +42,7 @@ export default function UsersManagement() {
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (searchTerm.trim() === "") {
-        // fetchUsers(currentPage)
+        fetchUsers(currentPage)
       } else {
         searchUsers(searchTerm, currentPage)
       }
