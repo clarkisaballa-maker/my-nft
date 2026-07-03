@@ -63,8 +63,8 @@ const BroadcastModal = ({ isOpen, onClose, onSend }) => {
     )
 }
 
-export default function LiveChat() {
-    const { messages, sendMessage, fetchChatHistory, users, killChat, sendTypingStatus, typingStatus, markMessagesAsRead, broadcastMessage } = useChatContext()
+export default function LiveChat({ id = null, username = null }) {
+    const { messages, sendMessage, fetchChatHistory, users, killChat, sendTypingStatus, typingStatus, markMessagesAsRead, broadcastMessage, setUsers } = useChatContext()
 
     const [selectedUser, setSelectedUser] = useState(null)
     const [messageText, setMessageText] = useState("")
@@ -84,6 +84,35 @@ export default function LiveChat() {
     const handleBroadcast = async (text) => {
         await broadcastMessage(text)
     }
+
+    const processedRef = useRef({ id: null, username: null })
+
+    useEffect(() => {
+        if (!id || !username) return
+
+        // Agar yehi id/username pehle se process ho chuka hai to dobara mat chalao
+        if (processedRef.current.id === id && processedRef.current.username === username) return
+        processedRef.current = { id, username }
+
+        setUsers((prev) => {
+            const existing = prev.find((u) => String(u.id) === String(id))
+            if (existing) {
+                setSelectedUser(existing)
+                return prev // list ko touch mat karo, wahi purani list return karo
+            }
+
+            const newUser = {
+                id: id,
+                username: username,
+                lastMessage: "",
+                timestamp: Date.now(),
+                pendingMessages: 0,
+            }
+
+            setSelectedUser(newUser)
+            return [newUser, ...prev]
+        })
+    }, [id, username])
 
     // Inside LiveChat component, after your existing useEffect hooks
     useEffect(() => {
@@ -278,14 +307,16 @@ export default function LiveChat() {
                 <div className="p-4 border-b border-slate-800/50">
                     <div className="flex items-center justify-between mb-2">
                         <h2 className="text-lg font-bold text-slate-100">Active Chats</h2>
-                        <Button
-                            onClick={() => setShowBroadcastModal(true)}
-                            size="sm"
-                            className="bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white"
-                        >
-                            <LucideIcons.Megaphone className="h-4 w-4 mr-2" />
-                            Broadcast
-                        </Button>
+                        <div className="flex gap-2">
+                            <Button
+                                onClick={() => setShowBroadcastModal(true)}
+                                size="sm"
+                                className="bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white"
+                            >
+                                <LucideIcons.Megaphone className="h-4 w-4 mr-2" />
+                                Broadcast
+                            </Button>
+                        </div>
                         {totalPendingMessages > 0 && (
                             <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
                                 {totalPendingMessages} new

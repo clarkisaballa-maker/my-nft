@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useUsersContext } from "../../app/AllContext/UsersContext"
 // import Transactions from "./Transactions"
 
-export default function UsersManagement() {
+export default function UsersManagement({ setActiveTab, setChatUser }) {
   const { users, fetchUsers, searchUsers, deleteUser, isLoadingUsers, totalUserPages } = useDashboard()
   const { transactions, fetchTasksByUser, resetUserData } = useUsersContext()
   const [resetStatus, setResetStatus] = useState(""); // "", "confirming", "awaitingPassword", "deleting", "deleted", "error"
@@ -183,6 +183,11 @@ export default function UsersManagement() {
     }).format(amount || 0);
   };
 
+  const handleChat = (id, username) => {
+    setChatUser({ id, username })
+    setActiveTab("live-chat")
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -297,6 +302,16 @@ export default function UsersManagement() {
                             <div className="flex flex-wrap justify-start md:justify-center gap-2 mb-4 md:mb-0">
 
                               <Button
+                                onClick={() => { handleChat(String(user._id), user.username) }}
+                                variant="ghost"
+                                size="icon"
+                                className="text-green-400 hover:bg-green-900/20 hover:text-green-300 rounded-lg"
+                                title={`Send Message`}
+                              >
+                                <LucideIcons.MessageCircle className="h-4 w-4" />
+                              </Button>
+
+                              <Button
                                 onClick={() => handleOpenReward(user)}
                                 variant="ghost"
                                 size="icon"
@@ -305,16 +320,6 @@ export default function UsersManagement() {
                               >
                                 <LucideIcons.Gift className="h-4 w-4" />
                               </Button>
-
-                              {/* <Button
-                                onClick={() => handleViewTasks(user)}
-                                variant="ghost"
-                                size="icon"
-                                className="text-green-400 hover:bg-green-900/20 hover:text-green-300 rounded-lg"
-                                title={`View Tasks (${user.activeSetTasks?.length || 0})`}
-                              >
-                                <LucideIcons.CheckCircle className="h-4 w-4" />
-                              </Button> */}
 
                               <Button
                                 onClick={() => handleOpenActions(user)}

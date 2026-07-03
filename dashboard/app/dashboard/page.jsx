@@ -24,6 +24,7 @@ function DashboardContent() {
   const [showLogout, setShowLogout] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
+  const [chatUser, setChatUser] = useState({ id: null, username: null })
 
   const [pendingUsersCount, setPendingUsersCount] = useState(0);
   const { users } = useChatContext()
@@ -65,7 +66,7 @@ function DashboardContent() {
   useEffect(() => {
     const checkAndRefreshSession = () => {
       const storedUser = localStorage.getItem("user")
-      
+
       if (!storedUser) {
         router.replace("/login")
         return
@@ -76,13 +77,13 @@ function DashboardContent() {
 
         // === NEW SESSION START LOGIC ===
         const now = Date.now()
-        
+
         // Agar loginTime nahi hai ya purana hai, to abhi se fresh start karo
         if (!user.loginTime) {
           user.loginTime = now
           localStorage.setItem("user", JSON.stringify(user))
           console.log("✅ New session started (loginTime added)")
-        } 
+        }
         else {
           const sessionAge = now - user.loginTime
           const maxSessionMs = SESSION_DURATION_HOURS * 60 * 60 * 1000
@@ -92,7 +93,7 @@ function DashboardContent() {
             localStorage.removeItem("user")
             router.replace("/login")
             return
-          } 
+          }
           else if (sessionAge > 1000 * 60 * 30) { // 30 minutes se zyada purana hai
             // Refresh loginTime to start fresh now
             user.loginTime = now
@@ -117,8 +118,8 @@ function DashboardContent() {
     router.replace("/login")
   }
 
-  const user = typeof window !== "undefined" 
-    ? JSON.parse(localStorage.getItem("user") || "{}") 
+  const user = typeof window !== "undefined"
+    ? JSON.parse(localStorage.getItem("user") || "{}")
     : {}
 
   const sidebarItems = [
@@ -249,10 +250,10 @@ function DashboardContent() {
 
         <main className="flex-1 overflow-auto pt-4 md:pt-0">
           <div className="md:p-8 p-4 md:mt-0 mt-16">
-            {activeTab === "users" && <UsersManagement />}
+            {activeTab === "users" && <UsersManagement setActiveTab={setActiveTab} setChatUser={setChatUser} />}
             {activeTab === "products" && <ProductsManagement />}
             {activeTab === "wallets" && <WalletsManagement />}
-            {activeTab === "live-chat" && <LiveChat />}
+            {activeTab === "live-chat" && <LiveChat id={chatUser.id} username={chatUser.username} />}
             {activeTab === "viplevels" && <VIPLevels />}
             {activeTab === "referrel" && <Referrel />}
           </div>
