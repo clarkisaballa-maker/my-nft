@@ -27,6 +27,12 @@ export default function Chatting({ userId, username, renderTrigger }) {
 
     const [filteredMessages, setFilteredMessages] = useState([])
 
+    // Onboarding state
+    const [historyLoaded, setHistoryLoaded] = useState(false)
+    const [selectedLanguage, setSelectedLanguage] = useState(null)
+    const [selectedPurpose, setSelectedPurpose] = useState(null)
+    const [onboardingCompleted, setOnboardingCompleted] = useState(false)
+
     const {
         messages,
         sendMessage,
@@ -39,6 +45,45 @@ export default function Chatting({ userId, username, renderTrigger }) {
         isChatOpen,
         setIsChatOpen,
     } = useLiveSupportContext()
+
+    const showOnboardingPrompts =
+        historyLoaded && filteredMessages.length === 0 && !onboardingCompleted
+
+    const onboardingActive = showOnboardingPrompts && !selectedPurpose
+
+    const getWaitingMessage = (lang) => {
+        switch (lang) {
+            case "Urdu":
+                return "Bara e meherbani, ek lamha intezar farmayeen, hum aapko ek live numainde se jor rahe hain."
+            case "Hindi":
+                return "Kripya ek pal rukiye, hum aapko ek live pratinidhi se jod rahe hain."
+            default:
+                return "Please wait a moment, we are connecting you with a live representator."
+        }
+    }
+
+    const handleLanguageSelect = (lang) => {
+        setSelectedLanguage(lang)
+    }
+
+    const handlePurposeSelect = async (purpose) => {
+        setSelectedPurpose(purpose)
+        setOnboardingCompleted(true)
+
+        await sendMessage({
+            userId,
+            username,
+            sender: "user",
+            text: `Language: ${selectedLanguage} | Purpose: ${purpose}`,
+        })
+
+        await sendMessage({
+            userId,
+            username,
+            sender: "support",
+            text: getWaitingMessage(selectedLanguage),
+        })
+    }
 
     useEffect(() => {
         if (isChatOpen && textareaRef.current) {
@@ -81,7 +126,7 @@ export default function Chatting({ userId, username, renderTrigger }) {
     useEffect(() => {
         if (userId) {
             connectSSE(userId)
-            fetchChatHistory(userId)
+            Promise.resolve(fetchChatHistory(userId)).finally(() => setHistoryLoaded(true))
         }
     }, [userId])
 
@@ -96,6 +141,12 @@ export default function Chatting({ userId, username, renderTrigger }) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
         }
     }, [messages, isChatOpen])
+
+    useEffect(() => {
+        if (isChatOpen && messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+        }
+    }, [selectedLanguage, selectedPurpose])
 
     useEffect(() => {
         if (isChatOpen) {
@@ -173,7 +224,6 @@ export default function Chatting({ userId, username, renderTrigger }) {
                 format: "webp",
             })
 
-            const optimizedSize = getBase64Size(optimizedDataUrl)
             const newMsg = {
                 userId,
                 username,
@@ -275,6 +325,9 @@ export default function Chatting({ userId, username, renderTrigger }) {
         return date.toLocaleDateString("en-US", { month: "short", day: "numeric" })
     }
 
+    const onboardingButtonClass =
+        "px-4 py-2 bg-[#241c12] hover:bg-amber-500 hover:text-[#1a140c] text-amber-400 border border-amber-500/30 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105"
+
     return (
         <>
             {!isChatOpen && renderTrigger && renderTrigger({
@@ -345,6 +398,91 @@ export default function Chatting({ userId, username, renderTrigger }) {
                                 </div>
                             )}
 
+                            {/* ===================== ONBOARDING PROMPTS ===================== */}
+                            {/* Step 1: Language selection (bot) */}
+                            {showOnboardingPrompts && (
+                                <div className="flex gap-3 justify-start animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center flex-shrink-0 shadow-lg">
+                                        <LucideIcons.Bot className="h-5 w-5 text-[#1a140c]" />
+                                    </div>
+                                    <div className="flex flex-col gap-2 max-w-[70%]">
+                                        <div className="bg-[#241c12] text-gray-200 rounded-2xl rounded-bl-md border border-amber-500/20 p-4 shadow-lg">
+                                            <p className="text-sm leading-relaxed">Please choose your preferred language:</p>
+                                        </div>
+                                        {!selectedLanguage && (
+                                            <div className="flex flex-wrap gap-2">
+                                                {["English", "Urdu", "Hindi"].map((lang) => (
+                                                    <button
+                                                        key={lang}
+                                                        onClick={() => handleLanguageSelect(lang)}
+                                                        className={onboardingButtonClass}
+                                                    >
+                                                        {lang}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Step 1 result: Selected language (user) */}
+                            {showOnboardingPrompts && selectedLanguage && (
+                                <div className="flex gap-3 justify-end animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                    <div className="flex flex-col gap-1 max-w-[70%]">
+                                        <div className="bg-gradient-to-br from-amber-500 to-orange-600 text-[#1a140c] rounded-2xl rounded-br-md p-4 shadow-lg">
+                                            <p className="text-sm leading-relaxed">{selectedLanguage}</p>
+                                        </div>
+                                    </div>
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0 shadow-lg">
+                                        <span className="text-[#1a140c] font-bold text-sm">{username.charAt(0)}</span>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Step 2: Purpose selection (bot) */}
+                            {showOnboardingPrompts && selectedLanguage && (
+                                <div className="flex gap-3 justify-start animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center flex-shrink-0 shadow-lg">
+                                        <LucideIcons.Bot className="h-5 w-5 text-[#1a140c]" />
+                                    </div>
+                                    <div className="flex flex-col gap-2 max-w-[70%]">
+                                        <div className="bg-[#241c12] text-gray-200 rounded-2xl rounded-bl-md border border-amber-500/20 p-4 shadow-lg">
+                                            <p className="text-sm leading-relaxed">Please choose the purpose of contact:</p>
+                                        </div>
+                                        {!selectedPurpose && (
+                                            <div className="flex flex-wrap gap-2">
+                                                {["Despot (Buy a Package)", "Withdraw", "Other"].map((purpose) => (
+                                                    <button
+                                                        key={purpose}
+                                                        onClick={() => handlePurposeSelect(purpose)}
+                                                        className={onboardingButtonClass}
+                                                    >
+                                                        {purpose}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Step 2 result: Selected purpose (user) */}
+                            {showOnboardingPrompts && selectedPurpose && (
+                                <div className="flex gap-3 justify-end animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                    <div className="flex flex-col gap-1 max-w-[70%]">
+                                        <div className="bg-gradient-to-br from-amber-500 to-orange-600 text-[#1a140c] rounded-2xl rounded-br-md p-4 shadow-lg">
+                                            <p className="text-sm leading-relaxed">{selectedPurpose}</p>
+                                        </div>
+                                    </div>
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0 shadow-lg">
+                                        <span className="text-[#1a140c] font-bold text-sm">{username.charAt(0)}</span>
+                                    </div>
+                                </div>
+                            )}
+                            {/* ===================== END ONBOARDING PROMPTS ===================== */}
+
+                            {/* Real messages */}
                             {filteredMessages.map((message, index) => {
                                 const showDate =
                                     index === 0 || formatDate(messages[index - 1].timestamp) !== formatDate(message.timestamp)
@@ -486,6 +624,7 @@ export default function Chatting({ userId, username, renderTrigger }) {
                                     </div>
                                 )
                             })}
+
                             {typingStatus[userId] && typingStatus[userId].sender === "support" && (
                                 <div className="flex items-start gap-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
                                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -566,7 +705,7 @@ export default function Chatting({ userId, username, renderTrigger }) {
                                         size="icon"
                                         variant="ghost"
                                         onClick={() => imageInputRef.current?.click()}
-                                        disabled={isOptimizing}
+                                        disabled={isOptimizing || onboardingActive}
                                         className="bg-[#2a2016] hover:bg-[#3a2a1a] text-amber-400 disabled:opacity-50"
                                     >
                                         {isOptimizing ? (
@@ -580,7 +719,7 @@ export default function Chatting({ userId, username, renderTrigger }) {
                                         size="icon"
                                         variant="ghost"
                                         onClick={() => fileInputRef.current?.click()}
-                                        disabled={isOptimizing}
+                                        disabled={isOptimizing || onboardingActive}
                                         className="bg-[#2a2016] hover:bg-[#3a2a1a] text-amber-400 disabled:opacity-50"
                                     >
                                         <LucideIcons.Paperclip className="h-5 w-5" />
@@ -599,15 +738,21 @@ export default function Chatting({ userId, username, renderTrigger }) {
                                                 handleSendMessage()
                                             }
                                         }}
-                                        placeholder={isOptimizing ? "Optimizing image..." : "Type your message..."}
-                                        disabled={isOptimizing}
+                                        placeholder={
+                                            onboardingActive
+                                                ? "Please select an option above..."
+                                                : isOptimizing
+                                                  ? "Optimizing image..."
+                                                  : "Type your message..."
+                                        }
+                                        disabled={isOptimizing || onboardingActive}
                                         style={{ lineHeight: "1.5rem" }}
                                         className="w-full bg-[#2a2016] text-gray-200 placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-amber-500 rounded-3xl pr-14 pl-4 py-3 resize-none min-h-[50px] max-h-[150px] overflow-y-auto disabled:opacity-50"
                                     />
                                     {/* Send button inside textarea */}
                                     <Button
                                         onClick={handleSendMessage}
-                                        disabled={inputText.trim() === "" || isOptimizing}
+                                        disabled={inputText.trim() === "" || isOptimizing || onboardingActive}
                                         size="icon"
                                         className="absolute right-2 bottom-2 h-8 w-8 bg-gradient-to-br from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-[#1a140c] disabled:bg-gray-600 disabled:text-gray-400 rounded-full shadow-lg transition-all duration-200"
                                     >
