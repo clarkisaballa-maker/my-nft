@@ -8,7 +8,7 @@ export function ChatProvider({ children }) {
   const host1offline = "http://localhost:3001/"
   const host2offline = "http://localhost:8000/"
   const host1online = "https://my-nft-backend.vercel.app/"
-  const host2online = "https://my-nft-liver-server.onrender.com/"
+  const host2online = "https://my-nft.onrender.com/"
   const [users, setUsers] = useState([])
   const [selectedUser, setSelectedUser] = useState(null)
   const [messages, setMessages] = useState([])

@@ -22,7 +22,7 @@ export function DashboardProvider({ children }) {
   const host1offline = "http://localhost:3001/"
   const host2offline = "http://localhost:8000/"
   const host1online = "https://my-nft-backend.vercel.app/"
-  const host2online = "https://my-nft-liver-server.onrender.com/"
+  const host2online = "https://my-nft.onrender.com/"
 
   useEffect(() => {
     const eventSource = new EventSource(`${host2online}api/realtime-events`);
