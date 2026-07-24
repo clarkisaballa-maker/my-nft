@@ -81,7 +81,7 @@ const Index = ({ vipInfo, user, setShowTaskSubmissionDialog, setTask, starting, 
 
     try {
       const taskNo = tasksState === 0 ? 1 : tasksState + 1;
-      const version = 1;
+      const version = 2;
 
       const taskResult = await getTaskForUser(
         user._id,
