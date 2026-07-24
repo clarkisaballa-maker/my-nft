@@ -1256,29 +1256,58 @@ router.get("/getUserByUserId/:userId", async (req, res) => {
 });
 
 // ✅ Fetch all referrals for a user
-router.get("/getReferrals/:userId", async (req, res) => {
+router.get("/getReferralTree/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
-    // 1️⃣ Find the user
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found." });
+    const rootUser = await User.findById(userId).lean();
+
+    if (!rootUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
 
-    // 2️⃣ Find all users whose refinviteCode matches this user's myinviteCode
-    const referrals = await User.find({ refinviteCode: user.myinviteCode })
-      .sort({ createdAt: -1 });
+    // Recursive Function
+    async function buildTree(user) {
+      // Find direct referrals
+      const referrals = await User.find({
+        refinviteCode: user.myinviteCode,
+      }).lean();
+
+      const children = await Promise.all(
+        referrals.map(async (child) => {
+          return await buildTree(child);
+        })
+      );
+
+      return {
+        _id: user._id,
+        username: user.username,
+        phone: user.phone,
+        profileimage: user.profileimage,
+        currentVIPLevel: user.currentVIPLevel,
+        myinviteCode: user.myinviteCode,
+        refinviteCode: user.refinviteCode,
+        totalBalance: user.totalBalance,
+        createdAt: user.createdAt,
+        children,
+      };
+    }
+
+    const tree = await buildTree(rootUser);
 
     res.status(200).json({
-      message: "Referrals fetched successfully",
-      total: referrals.length,
-      referrals,
+      success: true,
+      tree,
     });
-
-  } catch (error) {
-    console.error("Get Referrals Error:", error);
-    res.status(500).json({ error: "Server error. Please try again later." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 });
 

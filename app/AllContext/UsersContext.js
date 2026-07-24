@@ -473,7 +473,7 @@ export function UsersProvider({ children }) {
 
   const getReferralsAPI = async (userId) => {
     try {
-      const response = await fetch(`${host1online}api/users/getReferrals/${userId}`);
+      const response = await fetch(`${host1online}api/users/getReferralTree/${userId}`);
 
       const result = await response.json();
 
